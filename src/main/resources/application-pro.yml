@@ -1,0 +1,7 @@
+# 正式环境数据源
+spring: 
+  datasource: 
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.2.108:3306/bank_db?serverTimezone=Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: bank
+    password: bank@12345
