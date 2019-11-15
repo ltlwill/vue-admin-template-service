@@ -7,17 +7,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-
-
 import org.apache.tomcat.util.http.fileupload.FileUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-
 
 import com.alibaba.excel.EasyExcel;
 import com.efe.ms.bankservice.config.EnvironmentProperties;
@@ -191,5 +187,39 @@ public class ExcelServiceImpl extends BaseServiceImpl implements ExcelService {
 		path = prefix + sortName + "(" + (num + 1) + ")" + ext;
 		// 递归
 		return getPath4ExistsPath(path);
+	}
+
+	@Transactional
+	@Override
+	public void deleteExcelImpByIds(List<String> ids) {
+		if(CollectionUtils.isEmpty(ids)){
+			throw new RuntimeException("无效的参数");
+		}
+		excelImpDao.deleteByIds(ids);
+	}
+
+	@Transactional
+	@Override
+	public void deleteExcelImpDetailByIds(List<String> ids) {
+		if(CollectionUtils.isEmpty(ids)){
+			throw new RuntimeException("无效的参数");
+		}
+		excelImpDetailDao.deleteByIds(ids);
+	}
+
+	@Transactional
+	@Override
+	public void deleteExcelImpDetailByImpIds(List<String> impIds) {
+		if(CollectionUtils.isEmpty(impIds)){
+			throw new RuntimeException("无效的参数");
+		}
+		excelImpDetailDao.deleteByImpIds(impIds); 
+	}
+
+	@Transactional
+	@Override
+	public void deleteExcelImpInfo(List<String> ids) {
+		deleteExcelImpByIds(ids);
+		deleteExcelImpDetailByImpIds(ids);
 	}
 }

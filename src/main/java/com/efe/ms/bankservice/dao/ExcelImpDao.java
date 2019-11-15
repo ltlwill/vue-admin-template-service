@@ -1,5 +1,7 @@
 package com.efe.ms.bankservice.dao;
 
+import java.util.List;
+
 import com.efe.ms.bankservice.model.ExcelImp;
 
 /**
@@ -9,5 +11,7 @@ import com.efe.ms.bankservice.model.ExcelImp;
  * @date 2019年11月6日 下午3:40:03
  */
 public interface ExcelImpDao extends BaseDao<ExcelImp>{
+	
+	void deleteByIds(List<String> ids);
 
 }

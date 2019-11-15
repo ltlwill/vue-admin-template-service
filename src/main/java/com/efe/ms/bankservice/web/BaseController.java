@@ -18,9 +18,13 @@ public class BaseController {
 
 	protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
-	protected BusinessResult jsonSuccess(Object data) {
-        return BusinessResult.success().data(data);
+	protected BusinessResult jsonSuccess() {
+        return BusinessResult.success();
     }
+	
+	protected BusinessResult jsonSuccess(Object data) {
+		return BusinessResult.success().data(data);
+	}
 
 	protected BusinessResult jsonError(Object data,String message) {
         return BusinessResult.fail().data(data).message(message);

@@ -1,5 +1,7 @@
 package com.efe.ms.bankservice.service;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.efe.ms.bankservice.model.ExcelImp;
@@ -44,5 +46,45 @@ public interface ExcelService {
 	 * @return PageInfoVO<?>
 	 */
 	PageInfoVO<?> findExcelImpDetailList(ExcelImpDetail impDetail,PageInfoVO<?> page);
+	
+	/**
+	 * 
+	 * <p>按导入ID删除导入记录: </p>
+	 * @param
+	 * @author TianLong Liu
+	 * @date 2019年11月15日 下午3:41:48
+	 * @return void
+	 */
+	void deleteExcelImpByIds(List<String> ids);
+	
+	/**
+	 * 按ID删除导入明细
+	 * <p>Description: </p>
+	 * @param
+	 * @author TianLong Liu
+	 * @date 2019年11月15日 下午3:52:07
+	 * @return void
+	 */
+	void deleteExcelImpDetailByIds(List<String> ids);
+	
+	/**
+	 * 
+	 * <p>按导入ID删除导入明细: </p>
+	 * @param
+	 * @author TianLong Liu
+	 * @date 2019年11月15日 下午3:52:35
+	 * @return void
+	 */
+	void deleteExcelImpDetailByImpIds(List<String> impIds);
+	
+	/**
+	 * 
+	 * <p>按导入ID删除 导入记录和导入明细: </p>
+	 * @param
+	 * @author TianLong Liu
+	 * @date 2019年11月15日 下午3:52:46
+	 * @return void
+	 */
+	void deleteExcelImpInfo(List<String> ids);
 
 }
