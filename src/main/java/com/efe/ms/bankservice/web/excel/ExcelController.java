@@ -1,7 +1,6 @@
 package com.efe.ms.bankservice.web.excel;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,15 +70,15 @@ public class ExcelController extends BaseController {
 			PageInfoVO<?> page) {
 		return jsonSuccess(excelService.findExcelImpDetailList(impDetail, page));
 	}
-	
+
 	@GetMapping("/imp/delete")
-	public BusinessResult deleteExcelInfoByIds(String ids){
+	public BusinessResult deleteExcelInfoByIds(String ids) {
 		excelService.deleteExcelImpInfo(Arrays.asList(ids.split(",")));
 		return jsonSuccess();
 	}
-	
+
 	@GetMapping("/detail/delete")
-	public BusinessResult deleteExcelDetailByIds(String ids){
+	public BusinessResult deleteExcelDetailByIds(String ids) {
 		excelService.deleteExcelImpDetailByIds(Arrays.asList(ids.split(",")));
 		return jsonSuccess();
 	}

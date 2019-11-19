@@ -19,6 +19,7 @@ import com.alibaba.excel.EasyExcel;
 import com.efe.ms.bankservice.config.EnvironmentProperties;
 import com.efe.ms.bankservice.dao.ExcelImpDao;
 import com.efe.ms.bankservice.dao.ExcelImpDetailDao;
+import com.efe.ms.bankservice.excel.ExcelFactory;
 import com.efe.ms.bankservice.model.ExcelImp;
 import com.efe.ms.bankservice.model.ExcelImpDetail;
 import com.efe.ms.bankservice.model.User;
@@ -43,9 +44,47 @@ public class ExcelServiceImpl extends BaseServiceImpl implements ExcelService {
 	@Autowired
 	private ExcelImpDetailDao excelImpDetailDao;
 
+	@SuppressWarnings("unchecked")
 	@Transactional
 	@Override
-	public ExcelImp uploadExcel(MultipartFile file,User user) throws Exception {
+	public ExcelImp uploadExcel(MultipartFile file, User user) throws Exception {
+		if (file == null) {
+			throw new RuntimeException("没有获取到excel文件信息");
+		}
+		// 保存文件并记录数据
+		String absPath = saveFileToDisk(file);
+		String fileName = absPath
+				.substring(absPath.lastIndexOf(File.separator) + 1);
+		// 解析excel
+		List<ExcelImpDetail> details = null;
+		int status = ExcelImp.Status.SUCCESS;
+		try {
+			Object obj = ExcelFactory.getInstance().getExcelImpDetailParser()
+					.parse(absPath, null);
+			details = obj == null ? null : (List<ExcelImpDetail>) obj;
+		} catch (Exception e) {
+			status = ExcelImp.Status.FAIL;
+			logger.error("解析文件失败", e);
+		}
+		// 保存上传记录
+		ExcelImp imp = createExcelImp(file, user, fileName, absPath, status);
+		excelImpDao.add(imp);
+		// 保存明细
+		Optional.ofNullable(details).orElse(Collections.emptyList())
+				.forEach(detail -> {
+					detail.setFileLowerName(imp.getFileLowerName());
+					detail.setImpId(Long.valueOf(imp.getId()));
+					detail.setUserId(imp.getUserId());
+					detail.setUserName(imp.getUserName());
+					detail.setImportTime(imp.getImportTime());
+					excelImpDetailDao.add(detail);
+				});
+		return imp;
+	}
+
+	@Transactional
+	public ExcelImp uploadExcel2(MultipartFile file, User user)
+			throws Exception {
 		if (file == null) {
 			throw new RuntimeException("没有获取到excel文件信息");
 		}
@@ -56,27 +95,31 @@ public class ExcelServiceImpl extends BaseServiceImpl implements ExcelService {
 		// 解析excel
 		List<ExcelImpDetailVO> details = null;
 		int status = ExcelImp.Status.SUCCESS;
-		try{
-//			details = readExcel(file);
-			details = readExcel(new File(absPath)); 
-		}catch(Exception e){
+		try {
+			// details = readExcel(file);
+			details = readExcel(new File(absPath));
+		} catch (Exception e) {
 			status = ExcelImp.Status.FAIL;
-			logger.error("解析文件失败",e);
+			logger.error("解析文件失败", e);
 		}
 		// 保存上传记录
 		ExcelImp imp = createExcelImp(file, user, fileName, absPath, status);
-		excelImpDao.add(imp); 
+		excelImpDao.add(imp);
 		// 保存明细
-		Optional.ofNullable(details).orElse(Collections.emptyList()).forEach( vo -> {
-			ExcelImpDetail detail = new ExcelImpDetail();
-//			BeanUtils.copyProperties(vo, detail);
-			BeanCopier.create(ExcelImpDetailVO.class, ExcelImpDetail.class, false).copy(vo, detail, null);
-			detail.setImpId(Long.valueOf(imp.getId()));
-			detail.setUserId(imp.getUserId());
-			detail.setUserName(imp.getUserName());
-			detail.setImportTime(imp.getImportTime());
-			excelImpDetailDao.add(detail);
-		});
+		Optional.ofNullable(details)
+				.orElse(Collections.emptyList())
+				.forEach(vo -> {
+					ExcelImpDetail detail = new ExcelImpDetail();
+					// BeanUtils.copyProperties(vo, detail);
+						BeanCopier.create(ExcelImpDetailVO.class,
+								ExcelImpDetail.class, false).copy(vo, detail,
+								null);
+						detail.setImpId(Long.valueOf(imp.getId()));
+						detail.setUserId(imp.getUserId());
+						detail.setUserName(imp.getUserName());
+						detail.setImportTime(imp.getImportTime());
+						excelImpDetailDao.add(detail);
+					});
 		return imp;
 	}
 
@@ -94,7 +137,8 @@ public class ExcelServiceImpl extends BaseServiceImpl implements ExcelService {
 		return page.with(list);
 	}
 
-	private ExcelImp createExcelImp(final MultipartFile file,User user, String fileName,String absPath,int status) {
+	private ExcelImp createExcelImp(final MultipartFile file, User user,
+			String fileName, String absPath, int status) {
 		ExcelImp imp = new ExcelImp();
 		imp.setFileName(fileName);
 		imp.setFileLowerName(fileName.toLowerCase());
@@ -124,12 +168,11 @@ public class ExcelServiceImpl extends BaseServiceImpl implements ExcelService {
 				.head(ExcelImpDetailVO.class).sheet(0).doReadSync();
 		return list;
 	}
-	
+
 	/*
 	 * 读取excel数据
 	 */
-	private List<ExcelImpDetailVO> readExcel(final File file)
-			throws Exception {
+	private List<ExcelImpDetailVO> readExcel(final File file) throws Exception {
 		List<ExcelImpDetailVO> list = EasyExcel.read(file)
 				.head(ExcelImpDetailVO.class).sheet(0).doReadSync();
 		return list;
@@ -192,7 +235,7 @@ public class ExcelServiceImpl extends BaseServiceImpl implements ExcelService {
 	@Transactional
 	@Override
 	public void deleteExcelImpByIds(List<String> ids) {
-		if(CollectionUtils.isEmpty(ids)){
+		if (CollectionUtils.isEmpty(ids)) {
 			throw new RuntimeException("无效的参数");
 		}
 		excelImpDao.deleteByIds(ids);
@@ -201,7 +244,7 @@ public class ExcelServiceImpl extends BaseServiceImpl implements ExcelService {
 	@Transactional
 	@Override
 	public void deleteExcelImpDetailByIds(List<String> ids) {
-		if(CollectionUtils.isEmpty(ids)){
+		if (CollectionUtils.isEmpty(ids)) {
 			throw new RuntimeException("无效的参数");
 		}
 		excelImpDetailDao.deleteByIds(ids);
@@ -210,10 +253,10 @@ public class ExcelServiceImpl extends BaseServiceImpl implements ExcelService {
 	@Transactional
 	@Override
 	public void deleteExcelImpDetailByImpIds(List<String> impIds) {
-		if(CollectionUtils.isEmpty(impIds)){
+		if (CollectionUtils.isEmpty(impIds)) {
 			throw new RuntimeException("无效的参数");
 		}
-		excelImpDetailDao.deleteByImpIds(impIds); 
+		excelImpDetailDao.deleteByImpIds(impIds);
 	}
 
 	@Transactional

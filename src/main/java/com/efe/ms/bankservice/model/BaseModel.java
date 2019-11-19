@@ -19,5 +19,7 @@ public class BaseModel implements Serializable,Cloneable{
 	protected String id;
 	
 	protected String keyword;
+	
+	protected String keywordType;
 
 }
