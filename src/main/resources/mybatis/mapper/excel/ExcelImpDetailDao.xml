@@ -17,6 +17,7 @@
 		<result column="user_name" property="userName" jdbcType="VARCHAR" />	
 		<result column="import_time" property="importTime" jdbcType="TIMESTAMP" />
 		
+		<result column="file_name" property="fileName" jdbcType="VARCHAR" />	
 		<result column="file_lower_name" property="fileLowerName" jdbcType="VARCHAR" />	
 		<result column="balance" property="balance" jdbcType="DOUBLE" />	
 		<result column="to_account_name" property="toAccountName" jdbcType="VARCHAR" />	
@@ -28,12 +29,12 @@
 
 	<sql id="base_columns">
 		id,imp_id,account_name,account_no,bank_name,bank_no,transaction_date,transaction_time,
-		income,expend,user_id,user_name,import_time,file_lower_name,balance,to_account_name,to_account_no,
+		income,expend,user_id,user_name,import_time,file_name,file_lower_name,balance,to_account_name,to_account_no,
 		to_bank_name,summary,ip
 	</sql>
 	<sql id="insert_columns">
 		imp_id,account_name,account_no,bank_name,bank_no,transaction_date,transaction_time,
-		income,expend,user_id,user_name,import_time,file_lower_name,balance,to_account_name,to_account_no,
+		income,expend,user_id,user_name,import_time,file_name,file_lower_name,balance,to_account_name,to_account_no,
 		to_bank_name,summary,ip
 	</sql>
 	
@@ -136,6 +137,9 @@
 			<if test="fileLowerName != null and fileLowerName !=''">
 				AND (file_lower_name = #{fileLowerName,jdbcType=VARCHAR} or file_lower_name LIKE CONCAT(CONCAT('%', #{fileLowerName}),'%'))
 			</if>
+			<if test="fileName != null and fileName !=''">
+				AND (file_name = #{fileLowerName,jdbcType=VARCHAR} or file_name LIKE CONCAT(CONCAT('%', #{fileName}),'%'))
+			</if>
 			<if test="balance != null">
 				AND (balance = #{balance,jdbcType=DOUBLE} or balance LIKE CONCAT(CONCAT('%', #{balance}),'%'))
 			</if>
@@ -175,6 +179,7 @@
 			#{userId,jdbcType=VARCHAR},
 			#{userName,jdbcType=VARCHAR},
 			#{importTime,jdbcType=TIMESTAMP},
+			#{fileName,jdbcType=VARCHAR},
 			#{fileLowerName,jdbcType=VARCHAR},
 			#{balance,jdbcType=DOUBLE},
 			#{toAccountName,jdbcType=VARCHAR},

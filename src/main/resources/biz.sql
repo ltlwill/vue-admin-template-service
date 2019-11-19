@@ -2,6 +2,7 @@
 --------------------------------------业务相关SQL----------------------------------------
 
 ----------------------- 2019-11-19 表结构变更  begin ---------------------
+alter table t_excel_imp_detail add column file_name varchar(200) comment '文件名';
 alter table t_excel_imp_detail add column file_lower_name varchar(200) comment '文件名(小写)';
 alter table t_excel_imp_detail add column balance double(20,2) comment '余额';
 alter table t_excel_imp_detail add column to_account_name varchar(200) comment '对方户名';

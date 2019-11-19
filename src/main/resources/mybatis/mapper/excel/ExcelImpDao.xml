@@ -104,6 +104,22 @@
 	</insert>
 	
 	<!-- 批量删除 -->
+	<select id="getByIds" parameterType="java.util.List" resultMap="ExcelImpMap">
+		SELECT <include refid="base_columns"/> FROM t_excel_imp
+		<where>
+			<if test="list != null and list.size() > 0">
+				id IN
+				<foreach item="id" collection="list" open="(" close=")" separator=",">
+					#{id,jdbcType=BIGINT}
+				</foreach>
+			</if>
+			<if test="list == null or list.size() == 0">
+				1 = 2
+			</if>
+		</where>
+	</select>
+	
+	<!-- 批量删除 -->
 	<delete id="deleteByIds" parameterType="java.util.List">
 		DELETE FROM t_excel_imp
 		<where>

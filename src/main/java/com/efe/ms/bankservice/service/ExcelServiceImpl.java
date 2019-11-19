@@ -72,6 +72,7 @@ public class ExcelServiceImpl extends BaseServiceImpl implements ExcelService {
 		// 保存明细
 		Optional.ofNullable(details).orElse(Collections.emptyList())
 				.forEach(detail -> {
+					detail.setFileName(imp.getFileName()); 
 					detail.setFileLowerName(imp.getFileLowerName());
 					detail.setImpId(Long.valueOf(imp.getId()));
 					detail.setUserId(imp.getUserId());
@@ -262,7 +263,24 @@ public class ExcelServiceImpl extends BaseServiceImpl implements ExcelService {
 	@Transactional
 	@Override
 	public void deleteExcelImpInfo(List<String> ids) {
+		List<ExcelImp> list = excelImpDao.getByIds(ids);
+		// 删除文件
+		if(!CollectionUtils.isEmpty(list)){
+			list.forEach( imp -> {
+				deleteFile(imp.getAbsPath()); 
+			});
+		}
+		// 删除导入记录
 		deleteExcelImpByIds(ids);
+		// 删除明细
 		deleteExcelImpDetailByImpIds(ids);
+	}
+	
+	private void deleteFile(String path){
+		try{
+			FileUtils.forceDelete(new File(path));
+		}catch(Exception e){
+			logger.error("删除文件失败", e);
+		}
 	}
 }

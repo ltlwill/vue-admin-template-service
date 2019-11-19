@@ -30,6 +30,7 @@ public class ExcelImpDetail extends BaseModel {
 	private String userName;
 	private Date importTime;
 	
+	private String fileName;
 	private String fileLowerName;
 	private Double balance;
 	private String toAccountName;
