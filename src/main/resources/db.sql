@@ -7,7 +7,7 @@ CREATE USER 'bank'@'%' IDENTIFIED BY 'bank@12345';
 create database bank_db;
 create database bank_db default charset UTF8mb4 collate utf8_general_ci;
 
-GRANT privileges ON bank_db.* TO 'bank'@'%';
+GRANT all privileges ON bank_db.* TO 'bank'@'%';
 
 FLUSH PRIVILEGES;
 
