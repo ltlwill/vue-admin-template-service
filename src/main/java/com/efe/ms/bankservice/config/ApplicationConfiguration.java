@@ -74,7 +74,7 @@ public class ApplicationConfiguration extends WebMvcConfigurationSupport {
 	 * @date 2019年11月25日 上午10:34:12
 	 * @return HttpMessageConverter<String>
 	 */
-	@Bean
+	/*@Bean
 	public HttpMessageConverter<String> responseBodyConverter() {
 		StringHttpMessageConverter converter = new StringHttpMessageConverter(
 				Charset.forName(DEFAULT_CHARSET));
@@ -92,5 +92,5 @@ public class ApplicationConfiguration extends WebMvcConfigurationSupport {
 	public void configureContentNegotiation(
 			ContentNegotiationConfigurer configurer) {
 		configurer.favorPathExtension(false);
-	}
+	}*/
 }

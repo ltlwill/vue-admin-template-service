@@ -1,6 +1,8 @@
 package com.efe.ms.bankservice.web.user;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,9 +25,10 @@ public class UserController {
 
 	@PostMapping("/login")
 	public BusinessResult login(@RequestBody User user){
-		System.out.println("user login"); 
+		Map<String,Object> data = new HashMap<>();
 		if("admin".equals(user.getName()) && "111111".equals(user.getPassword())){
-			return BusinessResult.success().data("this-is-admin-token"); 
+			data.put("token", "this-is-admin-token");
+			return BusinessResult.success().data(data); 
 		}
 		return BusinessResult.fail("用户名或密码不正确");
 	}
