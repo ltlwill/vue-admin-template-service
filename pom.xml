@@ -24,7 +24,7 @@
 		<pagehelper.version>5.1.10</pagehelper.version>
 		<mysql-connector-java.version>8.0.11</mysql-connector-java.version>
         <fastJson.version>1.2.62</fastJson.version>
-        <httpclient.version>4.5.10</httpclient.version>
+        <httpclient.version>4.5.13</httpclient.version>
         <commons-lang3.version>3.9</commons-lang3.version>
 		<easyexcel.version>2.1.1</easyexcel.version>
 		<poi.version>3.17</poi.version>
