@@ -27,7 +27,7 @@
         <httpclient.version>4.5.10</httpclient.version>
         <commons-lang3.version>3.9</commons-lang3.version>
 		<easyexcel.version>2.1.1</easyexcel.version>
-		<poi.version>3.17</poi.version>
+		<poi.version>4.1.1</poi.version>
 		<commons-lang3.version>3.4</commons-lang3.version>
 		<commons-beanutils.version>1.9.4</commons-beanutils.version>
 		<!-- use 2.22.2 package error -->
